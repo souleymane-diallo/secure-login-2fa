@@ -21,7 +21,11 @@ exports.register = async (req, res) => {
         res.status(201).json({ message: "User registered successfully", user });
     
     } catch (err) {
-        
+        if (err.message.includes("UNIQUE constraint failed")) {
+            res.status(400).json({ error: "Email already in use. Please use a different email address." });
+        } else {
+            res.status(500).json({ error: "Internal server error. Please try again later." });
+        }
     }
 };
 
@@ -30,11 +34,6 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await userModel.findUserByEmail(email);
-        
-        if (!user || !bcrypt.compareSync(password, user.password)) {
-            return res.status(400).json({ error: 'Invalid email or password. Please try again.' });
-        }
         // Validate email format
         if (!validator.isEmail(email)) {
             return res.status(400).json({ 
@@ -42,6 +41,11 @@ exports.login = async (req, res) => {
             });
         }
 
+        const user = await userModel.findUserByEmail(email);
+        
+        if (!user || !bcrypt.compareSync(password, user.password)) {
+            return res.status(400).json({ error: 'Invalid email or password. Please try again.' });
+        }
 
         if (!user.secret) {
             const secret = speakeasy.generateSecret({ length: 20 });
@@ -82,6 +86,22 @@ exports.verify2FA = async (req, res) => {
         } else {
             res.status(400).json({ verified: false, error: 'Invalid 2FA token. Please provide a valid token.' });
         }
+    } catch (err) {
+        res.status(500).json({ error: "Internal server error. Please try again later." });
+    }
+};
+
+// Get user information
+exports.getUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await userModel.findUserById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found. Please provide a valid user ID.' });
+        }
+
+        res.json({ user });
     } catch (err) {
         res.status(500).json({ error: "Internal server error. Please try again later." });
     }
