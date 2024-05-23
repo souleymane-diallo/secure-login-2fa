@@ -1,16 +1,22 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
-const sqlite3 = require('sqlite3').verbose();
+const authRoutes = require('./routes/authRoutes');
+const db = require('./models/userModel');
+
+dotenv.config();
 
 const app = express();
-const db = new sqlite3.Database(':memory');
+
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use('/api', authRoutes);
+
+// Route de test
 app.get('/', (req, res) => {
     res.send('Secure Login 2FA WIP!');
 });
