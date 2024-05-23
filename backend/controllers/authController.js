@@ -1,6 +1,7 @@
 const validator = require('validator');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
+const bcrypt = require('bcryptjs');
 const userModel = require('../models/userModel');
 
 // Register a new user with email validation
@@ -15,6 +16,9 @@ exports.register = async (req, res) => {
             });
         }
 
+        const hashedPassword = bcrypt.hashSync(password, 8);
+        const user = await userModel.createUser(email, hashedPassword);
+        res.status(201).json({ message: "User registered successfully", user });
     
     } catch (err) {
         
@@ -26,12 +30,18 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        const user = await userModel.findUserByEmail(email);
+        
+        if (!user || !bcrypt.compareSync(password, user.password)) {
+            return res.status(400).json({ error: 'Invalid email or password. Please try again.' });
+        }
         // Validate email format
         if (!validator.isEmail(email)) {
             return res.status(400).json({ 
                 error: 'Invalid email format. Please provide a valid email address (e.g., user@example.com).' 
             });
         }
+
 
         if (!user.secret) {
             const secret = speakeasy.generateSecret({ length: 20 });
