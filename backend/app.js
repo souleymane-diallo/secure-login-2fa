@@ -1,6 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const bcrypt = require('bcryptjs');
+const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const db = require('./models/userModel');
 
@@ -9,6 +9,9 @@ dotenv.config();
 const app = express();
 
 
+app.use(cors({
+    origin: 'http://localhost:5173'
+}));
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
