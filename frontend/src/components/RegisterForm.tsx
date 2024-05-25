@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { AuthFormValue } from '../types'
-import validationSchema from '../utils/validationSchema';
+import { validationSchema } from '../utils/validationSchema';
 import config from '../config'
 
 export default function RegisterForm() {
@@ -27,7 +27,7 @@ export default function RegisterForm() {
     }
     setSubmitting(false);
   };
-  
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}

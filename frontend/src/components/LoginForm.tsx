@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { TailSpin } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import validationSchema from "../utils/validationSchema";
+import { validationSchema } from "../utils/validationSchema";
 import { AuthFormValue } from "../types";
 
 interface LoginFormProps {
@@ -21,7 +21,7 @@ export default function LoginForm({ onSubmit, status, isSubmitting }: LoginFormP
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ setStatus, handleChange }) => (
+      {() => (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -35,11 +35,7 @@ export default function LoginForm({ onSubmit, status, isSubmitting }: LoginFormP
                 type="email" 
                 name="email" 
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setStatus('');
-                  handleChange(e);
-                }}
-                 />
+              />
               <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
             </div>
           </div>
@@ -50,11 +46,7 @@ export default function LoginForm({ onSubmit, status, isSubmitting }: LoginFormP
                 type="password" 
                 name="password" 
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3" 
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setStatus('');
-                  handleChange(e);
-                }}
-                />
+              />
               <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
             </div>
           </div>
