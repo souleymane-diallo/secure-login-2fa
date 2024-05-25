@@ -1,6 +1,7 @@
 import './App.css'
-import LoginForm from './components/LoginForm'
-import Logo from './components/Logo'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AuthPage from './pages/AuthPage';
+import Logo from './components/Logo';
 
 function App() {
   
@@ -8,9 +9,12 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex flex-col items-center">
       <Logo />
-      <div className="mt-20">
-        <LoginForm />
-      </div>
+      <Router>
+      <Routes>
+        <Route path="/" element={<AuthPage />} />
+        <Route path="/welcome" element={<div>Welcome Page</div>} />
+      </Routes>
+    </Router>
     </div>
   )
 }
