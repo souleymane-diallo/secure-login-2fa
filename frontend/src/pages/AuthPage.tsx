@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import LoginForm from '../components/LoginForm';
 import TwoFactorForm from '../components/TwoFactorForm';
 
@@ -30,9 +31,11 @@ export default function AuthPage() {
         setQrCodeUrl(response.data.qrCodeUrl);
       }
       setStep(2); // Pass to 2FA step
+      toast.success('Login successful! Please complete 2FA.');
     } catch (error: any) {
       console.error('Login failed', error.response.data);
       setStatus('Invalid email or password');
+      toast.error('Login failed. Please try again.');
     }
     setIsSubmitting(false);
   };
@@ -42,15 +45,17 @@ export default function AuthPage() {
     try {
       const response = await axios.post('http://localhost:5000/api/verify-2fa', { ...values, userId: user.id });
       console.log("2FA verification successful:", response.data);
-      navigate('/welcome'); // Redirect to welcome page
+      toast.success('2FA verification successful! Redirecting...');
+      navigate('/welcome', { state: { userEmail: user.email } });
     } catch (error: any) {
       console.error('2FA verification failed', error.response.data);
       setStatus('Invalid 2FA token');
+      toast.error('2FA verification failed. Please try again.');
     }
     setIsSubmitting(false);
   };
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mt-40">
       <h1 className="text-xl font-bold mb-6 text-center text-gray-700">Connectez-vous à votre compte</h1>
       {step === 1 && (
         <LoginForm
