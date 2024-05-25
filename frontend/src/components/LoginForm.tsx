@@ -1,5 +1,6 @@
 
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
+import { TailSpin } from 'react-loader-spinner';
 import * as Yup from 'yup';
 
 interface LoginFormProps {
@@ -46,7 +47,7 @@ export default function LoginForm({ onSubmit, status, isSubmitting }: LoginFormP
           {status && <div className="text-red-500 text-sm mb-4">{status}</div>}
           <div className="mt-5">
             <button type="submit" className="w-full bg-blue-600 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50" disabled={isSubmitting}>
-              Connexion
+            {isSubmitting ? <TailSpin height="24" width="24" color="white" /> : 'Connexion'}
             </button>
           </div>
         </Form>
