@@ -1,9 +1,10 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AuthPage from './pages/AuthPage';
 import WelcomePage from './pages/WelcomePage';
+import RegisterForm from './components/RegisterForm';
 
 function App() {
   
@@ -13,6 +14,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<AuthPage />} />
+          <Route path="/register" element={<RegisterForm />} />
           <Route path="/welcome" element={<WelcomePage />} />
         </Routes>
       </Router>
