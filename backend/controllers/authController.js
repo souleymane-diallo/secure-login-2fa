@@ -54,7 +54,7 @@ exports.login = async (req, res) => {
 
             await userModel.updateUserSecret(user.id, secret.base32);
 
-            res.json({ message: '2FA setup required', secret: secret.base32, qrCodeUrl });
+            res.json({ message: '2FA setup required', user: { id: user.id, email: user.email }, qrCodeUrl });
         } else {
             res.json({ message: '2FA token required', user: { id: user.id, email: user.email } });
         }
