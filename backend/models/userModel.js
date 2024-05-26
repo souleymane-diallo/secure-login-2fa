@@ -36,6 +36,15 @@ const updateUserSecret = async (userId, secret) => {
     });
 };
 
+const updateUser2FAConfigured = async (userId, status) => {
+    return new Promise((resolve, reject) => {
+        db.run("UPDATE users SET is2FAConfigured = ? WHERE id = ?", [status, userId], function (err) {
+            if (err) reject(err);
+            else resolve();
+        });
+    });
+};
+
 const findUserSecretById = async (userId) => {
     return new Promise((resolve, reject) => {
         db.get("SELECT secret FROM users WHERE id = ?", [userId], (err, row) => {
@@ -50,6 +59,7 @@ module.exports = {
     findUserByEmail,
     findUserById,
     updateUserSecret,
+    updateUser2FAConfigured,
     findUserSecretById
 };
 
