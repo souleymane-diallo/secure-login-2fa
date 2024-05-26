@@ -18,7 +18,7 @@ function App() {
           <Route path="/welcome" element={<WelcomePage />} />
         </Routes>
       </Router>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} closeOnClick pauseOnHover draggable pauseOnFocusLoss />
+      <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} closeOnClick pauseOnHover draggable pauseOnFocusLoss />
     </div>
   )
 }

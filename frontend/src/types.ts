@@ -5,7 +5,7 @@ export interface User {
   email: string;
 }
 
-export interface AuthFormValue {
+export interface AuthFormValues {
   email: string;
   password: string;
 }

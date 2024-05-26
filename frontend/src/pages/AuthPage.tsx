@@ -5,8 +5,9 @@ import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import LoginForm from '../components/LoginForm';
 import TwoFactorForm from '../components/TwoFactorForm';
-import { Step, User, AuthFormValue, TwoFactorFormValues } from '../types';
+import { Step, User, AuthFormValues, TwoFactorFormValues } from '../types';
 import config from '../config'
+import { delay } from '../utils/delay';
 
 
 export default function AuthPage() {
@@ -17,46 +18,63 @@ export default function AuthPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const handleLoginSubmit = async (inputValues: AuthFormValue) => {
+  const handleLoginSubmit = async (inputValues: AuthFormValues) => {
     setIsSubmitting(true);
+    setStatus('');
+
     try {
       const response = await axios.post(`${config.apiBaseUrl}/login`, inputValues);
-      console.log("Login successful:", response.data);
-      setUser(response.data.user);
-      if (response.data.qrCodeUrl) {
+      
+      if (response?.data?.user) {
+        setUser(response.data.user);
+      } 
+
+      if (response?.data?.qrCodeUrl) {
         setQrCodeUrl(response.data.qrCodeUrl);
       }
-      setStep(2); // Pass to 2FA step
-      toast.success('Login successful! Please complete 2FA.');
+      
+      setStep(2); 
+      setStatus('');
+      toast.success('Connexion réussie ! Veuillez compléter la 2FA.');
+
     } catch (error: any) {
       console.error('Login failed', error.response.data);
-      setStatus('Invalid email or password');
-      toast.error('Login failed. Please try again.');
+      setStatus('Email ou mot de passe invalide');
+      toast.error('Échec de la connexion. Veuillez réessayer.');
+
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   const handle2FASubmit = async (values: TwoFactorFormValues) => {
     setIsSubmitting(true);
+    setStatus('');
+    
     try {
       const response = await axios.post(`${config.apiBaseUrl}/verify-2fa`, { ...values, userId: user?.id });
-      console.log("2FA verification successful:", response.data);
-      toast.success('2FA verification successful! Redirecting...');
-      navigate('/welcome', { state: { userEmail: user?.email } });
+      
+      if (response.data) {
+        toast.success('Vérification 2FA réussie ! Redirection en cours...');
+        await delay(2000);
+        navigate('/welcome', { state: { userEmail: user?.email } });
+      }
+
     } catch (error: any) {
       console.error('2FA verification failed', error.response.data);
-      setStatus('Invalid 2FA token');
-      toast.error('2FA verification failed. Please try again.');
+      setStatus('Code 2FA invalide');
+      toast.error('Échec de la vérification 2FA. Veuillez réessayer.');
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mt-40">
-      <h1 className="text-xl font-bold mb-6 text-center text-gray-700">Connectez-vous à votre compte</h1>
       {step === 1 && (
         <LoginForm
           onSubmit={handleLoginSubmit}

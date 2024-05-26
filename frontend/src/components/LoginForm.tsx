@@ -4,10 +4,10 @@ import { TailSpin } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { validationSchema } from "../utils/validationSchema";
-import { AuthFormValue } from "../types";
+import { AuthFormValues } from "../types";
 
 interface LoginFormProps {
-    onSubmit: (values: AuthFormValue, actions: FormikHelpers<AuthFormValue>) => void;
+    onSubmit: (values: AuthFormValues, actions: FormikHelpers<AuthFormValues>) => void;
     status?: string;
     isSubmitting: boolean;
 }
@@ -27,6 +27,7 @@ export default function LoginForm({ onSubmit, status, isSubmitting }: LoginFormP
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
+          <h2 className="text-xl font-bold mb-6 text-center text-gray-700">Connectez-vous à votre compte</h2>
         <Form>
           <div className="flex flex-col gap-2 mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Nom d'utilisateur ou courriel</label>

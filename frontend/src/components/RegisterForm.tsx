@@ -1,31 +1,42 @@
+import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import { TailSpin } from 'react-loader-spinner';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { AuthFormValue } from '../types'
+import { toast } from 'react-toastify';
+import { AuthFormValues } from '../types'
 import { validationSchema } from '../utils/validationSchema';
+import { delay } from '../utils/delay';
 import config from '../config'
 
 export default function RegisterForm() {
   const navigate = useNavigate();
 
-  const initialValues: AuthFormValue = {
+  const initialValues: AuthFormValues = {
     email: '',
     password: '',
   };
 
- 
-  const handleSubmit = async (inputValues: AuthFormValue, { setSubmitting, setStatus }: FormikHelpers<AuthFormValue>) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (inputValues: AuthFormValues, { setSubmitting, setStatus }: FormikHelpers<AuthFormValues>) => {
+    setIsSubmitting(true);
+    setStatus('');
+
     try {
       await axios.post(`${config.apiBaseUrl}/register`, inputValues);
-      setStatus('Enregistrement réussi! Redirection vers la connexion...');
+      setStatus('')
+      toast.success('Enregistrement réussi! Redirection vers la connexion...');
+      await delay(2000);
       setTimeout(() => navigate('/'), 2000);
     } catch (error: any) {
       console.error('Registration failed', error.response.data);
       setStatus('Registration failed. Please try again.');
+    } finally {
+      await delay(1000);
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   return (
@@ -41,7 +52,7 @@ export default function RegisterForm() {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, status }) => (
+        {({ status }) => (
           <Form>
             <div className="flex flex-col gap-2 mb-4">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">Nom d'utilisateur ou courriel</label>
