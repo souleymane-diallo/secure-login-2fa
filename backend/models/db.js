@@ -10,7 +10,8 @@ database.serialize(() => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
-            secret TEXT
+            secret TEXT,
+            is2FAConfigured INTEGER DEFAULT 0
         )
     `;
     database.run(createUsersTableQuery, (error) => {
