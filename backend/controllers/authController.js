@@ -16,6 +16,13 @@ exports.register = async (req, res) => {
             });
         }
 
+        // Validate password length
+        if (password.length < 6) {
+            return res.status(400).json({ 
+                error: 'Password must be at least 6 characters long.' 
+            });
+        }
+
         const hashedPassword = bcrypt.hashSync(password, 8);
         const user = await userModel.createUser(email, hashedPassword);
         res.status(201).json({ message: "User registered successfully", user });
