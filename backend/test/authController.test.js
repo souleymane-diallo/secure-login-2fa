@@ -1,19 +1,19 @@
 const request = require('supertest');
 const { describe, it, expect } = require('@jest/globals');
+const clearDatabase = require('../clearDatabaseTest');
 const app = require('../app');
 
 let server;
 
-beforeAll((done) => {
-  const PORT = 5001; 
-  server = app.listen(PORT, () => {
-    console.log(`Test server running on port ${PORT}`);
-    done();
+beforeAll(async () => {
+  await clearDatabase();
+  server = app.listen(process.env.PORT, () => { 
+    console.log(`Test server running on port ${process.env.PORT}`);
   });
 });
 
-afterAll((done) => {
-  server.close(done);
+afterAll(() => {
+  server.close();
 });
 
 describe('Auth Controller', () => {

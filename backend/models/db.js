@@ -1,9 +1,10 @@
 const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const dotenv = require('dotenv');
 
-const databaseFilePath = path.resolve(__dirname, 'users.db');
+dotenv.config();
+
+const databaseFilePath = process.env.DATABASE_URL.replace('sqlite:', '');
 const database = new sqlite3.Database(databaseFilePath);
-
 database.serialize(() => {
     const createUsersTableQuery = `
         CREATE TABLE IF NOT EXISTS users (

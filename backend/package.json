@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --config jest.config.js",
-    "start": "nodemon app.js"
+    "start": "NODE_ENV=development nodemon app.js"
   },
   "keywords": [],
   "author": "",
