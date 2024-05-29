@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import { TailSpin } from 'react-loader-spinner';
 import { motion } from 'framer-motion';
-import { twoFactorValidationSchema } from '../utils/validationSchema';
+import { inputFactorValidationSchema } from '../utils/validationSchema';
 
 interface TwoFactorFormProps {
 	onSubmit: (values: TwoFactorFormValues, actions: FormikHelpers<TwoFactorFormValues>) => void;
@@ -20,7 +20,7 @@ export default function TwoFactorForm({ onSubmit, status, isSubmitting, userEmai
 	return (
 		<Formik
 			initialValues={{ token: '' }}
-			validationSchema={twoFactorValidationSchema}
+			validationSchema={inputFactorValidationSchema}
 			onSubmit={onSubmit}
 		>
 			{() => (
@@ -33,7 +33,7 @@ export default function TwoFactorForm({ onSubmit, status, isSubmitting, userEmai
 					<Form>
 						<div className="mb-4">
 							{qrCodeUrl && (
-								<div className="mb-4">
+								<div className="mb-4 flex flex-col items-center">
 									<p className="text-gray-700">Scannez le code QR avec Google Authentifcator</p>
 									<img src={qrCodeUrl} alt="QR Code for 2FA" />
 								</div>

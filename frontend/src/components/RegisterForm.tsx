@@ -5,34 +5,40 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { AuthFormValues } from '../types'
-import { validationSchema } from '../utils/validationSchema';
+import { IAuthFormValues } from '../types'
+import { inputValidationSchema } from '../utils/validationSchema';
 import { delay } from '../utils/delay';
-import config from '../config'
+import config from '../apiConfig'
 
 export default function RegisterForm() {
+  /* Local */
   const navigate = useNavigate();
 
-  const initialValues: AuthFormValues = {
+  const initialValues: IAuthFormValues = {
     email: '',
     password: '',
   };
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (inputValues: AuthFormValues, { setSubmitting, setStatus }: FormikHelpers<AuthFormValues>) => {
+  /* Methods */
+  async function onHandleSubmit(inputValues: IAuthFormValues, { setSubmitting, setStatus }: FormikHelpers<IAuthFormValues>) {
     setIsSubmitting(true);
     setStatus('');
 
     try {
-      await axios.post(`${config.apiBaseUrl}/register`, inputValues);
-      setStatus('')
+      const response = await axios.post(`${config.apiBaseUrl}/register`, inputValues);
+      
       toast.success('Enregistrement réussi! Redirection vers la connexion...');
       await delay(2000);
-      setTimeout(() => navigate('/'), 2000);
+      if (response.data) {
+        setTimeout(() => navigate('/'), 2000);
+      }
+
     } catch (error: any) {
-      console.error('Registration failed', error.response.data);
       setStatus('Registration failed. Please try again.');
+      toast.error("Echec de création d'un utilisateur! Veillez réessayer.");
+
     } finally {
       await delay(1000);
       setSubmitting(false);
@@ -49,8 +55,8 @@ export default function RegisterForm() {
       <h1 className="text-xl font-bold mb-6 text-center text-gray-700">Créer votre compte</h1>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        validationSchema={inputValidationSchema}
+        onSubmit={onHandleSubmit}
       >
         {({ status }) => (
           <Form>
@@ -74,7 +80,7 @@ export default function RegisterForm() {
                 type="submit" 
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }} 
-                className="w-full bg-blue-600 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50" disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50" disabled={isSubmitting}
               >
                 {isSubmitting ? <TailSpin height="24" width="24" color="white" /> : 'Enregistrer'}
               </motion.button>

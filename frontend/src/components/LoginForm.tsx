@@ -3,11 +3,11 @@ import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { TailSpin } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { validationSchema } from "../utils/validationSchema";
-import { AuthFormValues } from "../types";
+import { inputValidationSchema } from "../utils/validationSchema";
+import { IAuthFormValues } from "../types";
 
 interface LoginFormProps {
-    onSubmit: (values: AuthFormValues, actions: FormikHelpers<AuthFormValues>) => void;
+    onSubmit: (values: IAuthFormValues, actions: FormikHelpers<IAuthFormValues>) => void;
     status?: string;
     isSubmitting: boolean;
 }
@@ -18,7 +18,7 @@ export default function LoginForm({ onSubmit, status, isSubmitting }: LoginFormP
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
-      validationSchema={validationSchema}
+      validationSchema={inputValidationSchema}
       onSubmit={onSubmit}
     >
       {() => (
@@ -57,7 +57,7 @@ export default function LoginForm({ onSubmit, status, isSubmitting }: LoginFormP
               type="submit" 
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="w-full bg-blue-600 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50" disabled={isSubmitting}
+              className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50" disabled={isSubmitting}
             >
               {isSubmitting ? <TailSpin height="24" width="24" color="white" /> : 'Connexion'}
             </motion.button>

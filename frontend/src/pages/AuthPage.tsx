@@ -5,89 +5,95 @@ import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import LoginForm from '../components/LoginForm';
 import TwoFactorForm from '../components/TwoFactorForm';
-import { Step, User, AuthFormValues, TwoFactorFormValues } from '../types';
-import config from '../config'
+import { Step, IUser, IAuthFormValues, ITwoFactorFormValues } from '../types';
+import apiConfigUrl from '../apiConfig'
 import { delay } from '../utils/delay';
 
 
 export default function AuthPage() {
+  /* Local */
   const [step, setStep] = useState<Step>(1); 
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<IUser>();
   const [qrCodeUrl, setQrCodeUrl] = useState<string>();
   const [status, setStatus] = useState<string>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const handleLoginSubmit = async (inputValues: AuthFormValues) => {
+  /* Methods */
+  async function onHandleLoginSubmit(initialValues: IAuthFormValues) {
     setIsSubmitting(true);
     setStatus('');
 
     try {
-      const response = await axios.post(`${config.apiBaseUrl}/login`, inputValues);
-      
+      const response = await axios.post(`${apiConfigUrl.apiBaseUrl}/login`, initialValues);
+
       if (response?.data?.user) {
         setUser(response.data.user);
-      } 
+      }
 
       if (response?.data?.qrCodeUrl) {
-        setQrCodeUrl(response.data.qrCodeUrl);
+        setQrCodeUrl(response?.data?.qrCodeUrl);
       }
-      
-      setStep(2); 
+      setStep(2);
       setStatus('');
-      toast.success('Connexion réussie ! Veuillez compléter la 2FA.');
+      toast.success("Connexion réussie! veuillez compléter l'Authentification double facteur.");
 
-    } catch (error: any) {
-      console.error('Login failed', error.response.data);
+    } catch (error) {
       setStatus('Email ou mot de passe invalide');
-      toast.error('Échec de la connexion. Veuillez réessayer.');
-
+      toast.error('Echec de la connexion; Veuillez réessayer.');
     } finally {
       setIsSubmitting(false);
     }
-  };
 
-  const handle2FASubmit = async (values: TwoFactorFormValues) => {
+  }
+
+  async function onHandle2FASubmit(inputValues: ITwoFactorFormValues) {
     setIsSubmitting(true);
     setStatus('');
     
     try {
-      const response = await axios.post(`${config.apiBaseUrl}/verify-2fa`, { ...values, userId: user?.id });
+      const response = await axios.post(`${apiConfigUrl.apiBaseUrl}/verify-2fa`, { ...inputValues, userId: user?.id },);
+
       
       if (response.data) {
-        toast.success('Vérification 2FA réussie ! Redirection en cours...');
+        toast.success('Vérification réussie! Redirection en cours...');
         await delay(2000);
-        navigate('/welcome', { state: { userEmail: user?.email } });
+        const tokenStr = response.data.token;
+        const result = await axios.get(`${apiConfigUrl.apiBaseUrl}/user/${user?.id}`, { headers: { Authorization: `Bearer ${tokenStr}`}});
+        console.log("user", result.data);
+        if (result) {
+          navigate('/welcome', { state: { userEmail: user?.email } });
+        }
       }
 
     } catch (error: any) {
-      console.error('2FA verification failed', error.response.data);
-      setStatus('Code 2FA invalide');
-      toast.error('Échec de la vérification 2FA. Veuillez réessayer.');
+      setStatus('Code code authentification invalide');
+      toast.error('Échec de la vérification du code. Veuillez réessayer.');
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
+    <motion.div
+      initial={{ opacity: 0, y: 25 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mt-40">
+      transition={{ duration: 1 }}
+      className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mt-40"
+    >
       {step === 1 && (
         <LoginForm
-          onSubmit={handleLoginSubmit}
+          onSubmit={onHandleLoginSubmit}
           status={status}
           isSubmitting={isSubmitting}
         />
       )}
       {step === 2 && user && (
-        <TwoFactorForm
-          onSubmit={handle2FASubmit}
+        <TwoFactorForm 
+          onSubmit={onHandle2FASubmit}
           status={status}
           isSubmitting={isSubmitting}
-          userEmail={user.email}
+          userEmail={user?.email}
           qrCodeUrl={qrCodeUrl}
         />
       )}

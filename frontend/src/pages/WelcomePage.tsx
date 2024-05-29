@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import Confetti from 'react-confetti';
 import { useLocation } from 'react-router-dom';
+import Confetti from 'react-confetti';
 import Logo from '../components/Logo';
 
 interface LocationState {
@@ -8,8 +8,10 @@ interface LocationState {
 }
 
 export default function WelcomePage() {
+  /* Local */
   const location = useLocation();
   const state = location.state as LocationState;
+
   return (
     <>
       <Logo />
