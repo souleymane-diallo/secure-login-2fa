@@ -2,6 +2,7 @@ const validator = require('validator');
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
 
 // Register a new user with email validation
@@ -66,7 +67,7 @@ exports.login = async (req, res) => {
             const otpauthUrl = speakeasy.otpauthURL({ secret: user.secret, label: `MyApp (${email})`, encoding: 'base32' });
             const qrCodeUrl = await qrcode.toDataURL(otpauthUrl);
 
-            return res.json({ message: '2FA setup required', user: { id: user.id, email: user.email }, qrCodeUrl });
+            return res.json({ message: '2FA setup required', user: { id: user.id, email: user.email, sercret: user.secret }, qrCodeUrl });
         } else {
             // If 2FA is configured, require 2FA token
             return res.json({ message: '2FA token required', user: { id: user.id, email: user.email } });
@@ -81,14 +82,14 @@ exports.login = async (req, res) => {
 exports.verify2FA = async (req, res) => {
     try {
         const { token, userId } = req.body;
-        const user = await userModel.findUserSecretById(userId);
+        const userSecret = await userModel.findUserSecretById(userId);
 
-        if (!user) {
+        if (!userSecret) {
             return res.status(400).json({ error: 'User not found. Please provide a valid user ID.' });
         }
 
         const verified = speakeasy.totp.verify({
-            secret: user.secret,
+            secret: userSecret.secret,
             encoding: 'base32',
             token: token,
             window: 2
@@ -96,12 +97,18 @@ exports.verify2FA = async (req, res) => {
 
         if (verified) {
             await userModel.updateUser2FAConfigured(userId, 1);
-            res.json({ verified: true });
+            res.json({ verified, 
+                token: jwt.sign(
+                { userId: userId },
+                 process.env.SECRETTOKEN,
+                { expiresIn: '24h' }
+            ) });
         } else {
-            res.status(400).json({ verified: false, error: 'Invalid 2FA token. Please try again.' });
+            res.status(400).json({ verified, error: 'Invalid 2FA token. Please try again.' });
         }
 
     } catch (err) {
+        console.log("err", err);
         res.status(500).json({ error: "Internal server error. Please try again later." });
     }
 };
