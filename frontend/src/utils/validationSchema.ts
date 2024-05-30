@@ -9,14 +9,14 @@ Yup.setLocale({
   },
 });
 
-const validationSchema = Yup.object({
+const inputValidationSchema = Yup.object({
   email: Yup.string().email().required(),
   password: Yup.string().required(),
 });
 
-const twoFactorValidationSchema = Yup.object({
+const inputFactorValidationSchema = Yup.object({
   token: Yup.string().required('Ce champ est obligatoire'),
 });
 
-export { validationSchema, twoFactorValidationSchema };
+export { inputValidationSchema, inputFactorValidationSchema };
 

@@ -1,15 +1,15 @@
 export type Step = 1 | 2;
 
-export interface User {
+export interface IUser {
   id: number;
   email: string;
 }
 
-export interface AuthFormValues {
+export interface IAuthFormValues {
   email: string;
   password: string;
 }
 
-export interface TwoFactorFormValues {
+export interface ITwoFactorFormValues {
   token: string;
 }
