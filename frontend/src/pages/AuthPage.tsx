@@ -67,7 +67,6 @@ export default function AuthPage() {
       }
 
     } catch (error: any) {
-      console.error('Erreur lors de la vérification du code', error);
       setStatus('Code code authentification invalide');
       toast.error('Échec de la vérification du code. Veuillez réessayer.');
     } finally {

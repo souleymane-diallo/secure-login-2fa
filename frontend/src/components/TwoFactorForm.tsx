@@ -34,7 +34,7 @@ export default function TwoFactorForm({ onSubmit, status, isSubmitting, userEmai
 						<img src={lock} alt="lock" className="inline-block h-20 w-20 rounded-lg ring-2 ring-white" />
 					</div>
 					{userEmail && <h2 className="text-xl font-bold mb-6 text-center text-gray-700">Vérification de l'email {userEmail}</h2>}
-					<p className='text-gray-700'>entrez votre code pour vérifier votre identité</p>
+					<p className='text-gray-700'>Entrez votre code pour vérifier votre identité</p>
 					<Form>
 						<div className="mb-4">
 							{qrCodeUrl && (

@@ -13,7 +13,6 @@ interface LoginFormProps {
     isSubmitting: boolean;
 }
 
-
 export default function LoginForm({ onSubmit, status, isSubmitting }: LoginFormProps) {
 
   return (

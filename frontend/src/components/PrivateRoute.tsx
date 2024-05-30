@@ -5,7 +5,9 @@ import { useAuth } from "../contexts/AuthContext";
 interface IPrivateRouteProps {
     children: ReactNode
 }
+
 export default function PrivateRoute({ children }: IPrivateRouteProps) {
+    /* Locl */
     const { isAuthenticated } = useAuth();
     const location = useLocation();
 

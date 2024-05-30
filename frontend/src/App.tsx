@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './contexts/AuthContext';
@@ -23,6 +23,7 @@ export default function App() {
               </PrivateRoute>
               } 
             />
+            <Route path="*" element={<Navigate replace to="/" />} />
           </Routes>
         </Router>
       </AuthProvider>
