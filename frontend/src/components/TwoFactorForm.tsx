@@ -52,7 +52,7 @@ export default function TwoFactorForm({ onSubmit, status, isSubmitting, userEmai
 							type="submit" 
 							whileHover={{ scale: 1.1 }}
 							whileTap={{ scale: 0.9 }}
-								className="w-full bg-blue-600 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50" disabled={isSubmitting}
+								className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50" disabled={isSubmitting}
 							>
 								{isSubmitting ? <TailSpin height="24" width="24" color="white" /> : 'Vérifier 2FA'}
 							</motion.button>

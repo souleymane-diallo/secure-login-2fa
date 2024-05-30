@@ -8,10 +8,12 @@ import TwoFactorForm from '../components/TwoFactorForm';
 import { Step, IUser, IAuthFormValues, ITwoFactorFormValues } from '../types';
 import apiConfigUrl from '../apiConfig'
 import { delay } from '../utils/delay';
+import { useAuth } from '../contexts/AuthContext';
 
 
 export default function AuthPage() {
   /* Local */
+  const { login } = useAuth();
   const [step, setStep] = useState<Step>(1); 
   const [user, setUser] = useState<IUser>();
   const [qrCodeUrl, setQrCodeUrl] = useState<string>();
@@ -34,6 +36,7 @@ export default function AuthPage() {
       if (response?.data?.qrCodeUrl) {
         setQrCodeUrl(response?.data?.qrCodeUrl);
       }
+      
       setStep(2);
       setStatus('');
       toast.success("Connexion réussie! veuillez compléter l'Authentification double facteur.");
@@ -53,20 +56,19 @@ export default function AuthPage() {
     
     try {
       const response = await axios.post(`${apiConfigUrl.apiBaseUrl}/verify-2fa`, { ...inputValues, userId: user?.id },);
-
-      
-      if (response.data) {
+      console.log("response", response.data);
+      if (response.data && response.data.verified) {
+        const tokenStr: string = response.data.token;
+        login(tokenStr);
         toast.success('Vérification réussie! Redirection en cours...');
-        await delay(2000);
-        const tokenStr = response.data.token;
-        const result = await axios.get(`${apiConfigUrl.apiBaseUrl}/user/${user?.id}`, { headers: { Authorization: `Bearer ${tokenStr}`}});
-        console.log("user", result.data);
-        if (result) {
-          navigate('/welcome', { state: { userEmail: user?.email } });
-        }
+        await delay(1000);
+        setTimeout(() => navigate('/welcome', { state: { userEmail: user?.email } }), 2000) ;
+      } else {
+        throw new Error('verification failed');
       }
 
     } catch (error: any) {
+      console.error('Erreur lors de la vérification du code', error);
       setStatus('Code code authentification invalide');
       toast.error('Échec de la vérification du code. Veuillez réessayer.');
     } finally {

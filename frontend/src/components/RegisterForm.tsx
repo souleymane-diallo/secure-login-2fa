@@ -29,9 +29,9 @@ export default function RegisterForm() {
     try {
       const response = await axios.post(`${config.apiBaseUrl}/register`, inputValues);
       
-      toast.success('Enregistrement réussi! Redirection vers la connexion...');
-      await delay(2000);
       if (response.data) {
+        toast.success('Enregistrement réussi! Redirection vers la connexion...');
+        await delay(1000);
         setTimeout(() => navigate('/'), 2000);
       }
 
@@ -40,7 +40,6 @@ export default function RegisterForm() {
       toast.error("Echec de création d'un utilisateur! Veillez réessayer.");
 
     } finally {
-      await delay(1000);
       setSubmitting(false);
     }
   };
