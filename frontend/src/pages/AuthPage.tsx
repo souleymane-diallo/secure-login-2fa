@@ -56,7 +56,6 @@ export default function AuthPage() {
     
     try {
       const response = await axios.post(`${apiConfigUrl.apiBaseUrl}/verify-2fa`, { ...inputValues, userId: user?.id },);
-      console.log("response", response.data);
       if (response.data && response.data.verified) {
         const tokenStr: string = response.data.token;
         login(tokenStr);

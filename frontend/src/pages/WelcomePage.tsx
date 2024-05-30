@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
-import Confetti from 'react-confetti';
-import Logo from '../components/Logo';
+import NavBar from '../components/NavBar';
+import Footer from '../components/Footer';
 
 interface LocationState {
   userEmail: string;
@@ -14,13 +14,8 @@ export default function WelcomePage() {
 
   return (
     <>
-      <Logo />
-      <div className="flex flex-col items-center justify-center  text-white">
-        <Confetti
-          width={window.innerWidth}
-          height={window.innerHeight}
-          numberOfPieces={500}
-        />
+      <NavBar />
+      <div className="flex flex-col items-center justify-center  text-white relative mt-64">
         <motion.div
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -38,6 +33,7 @@ export default function WelcomePage() {
           </motion.button>
         </motion.div>
       </div>
+      <Footer />
     </>
   );
 }

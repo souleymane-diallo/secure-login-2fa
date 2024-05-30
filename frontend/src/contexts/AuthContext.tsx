@@ -13,35 +13,36 @@ interface IAuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: IAuthProviderProps) => {
-    const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
+  /* Local */
+  const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
 
-    function login (token: string) {
-        const expiryTime = new Date().getTime() + (3600 * 1000);
-        localStorage.setItem('tokenAuth', token);
-        localStorage.setItem('tokenExpiry', expiryTime.toString());
-        setAuthenticated(true);
+  /* Methods */
+  function login (token: string) {
+    const expiryTime = new Date().getTime() + (3600 * 1000);
+    localStorage.setItem('tokenAuth', token);
+    localStorage.setItem('tokenExpiry', expiryTime.toString());
+    setAuthenticated(true);
+  }
+
+  function logout() {
+    localStorage.removeItem('tokenAuth');
+    localStorage.removeItem('tokenExpiry');
+    setAuthenticated(false);
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem('tokenAuth');
+    const tokenExpiry = localStorage.getItem('tokenExpiry');
+    if (token && tokenExpiry && new Date().getTime() < Number(tokenExpiry)) {
+      setAuthenticated(true);
     }
+  }, []);
 
-    function logout() {
-        localStorage.removeItem('tokenAuth');
-        localStorage.removeItem('tokenExpiry');
-        setAuthenticated(false);
-    }
-
-    useEffect(() => {
-      const token = localStorage.getItem('tokenAuth');
-      const tokenExpiry = localStorage.getItem('tokenExpiry');
-      if (token && tokenExpiry && new Date().getTime() < Number(tokenExpiry)) {
-        setAuthenticated(true);
-      }
-
-    }, []);
-
-    return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout}}>
-            {children}
-        </AuthContext.Provider>
-    )
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout}}>
+      {children}
+    </AuthContext.Provider>
+  )
 };
 
 export const useAuth = () => {

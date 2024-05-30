@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { IAuthFormValues } from '../types'
 import { inputValidationSchema } from '../utils/validationSchema';
 import { delay } from '../utils/delay';
+import pen from "../assets/pen.png";
 import config from '../apiConfig'
 
 export default function RegisterForm() {
@@ -51,7 +52,9 @@ export default function RegisterForm() {
       transition={{ duration: 0.5 }}
       className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mt-40"
     >
-      <h1 className="text-xl font-bold mb-6 text-center text-gray-700">Créer votre compte</h1>
+      <div className="mb-4 flex -space-x-1 overflow-hidden justify-center">
+        <img src={pen} alt="lock" className="inline-block h-20 w-20 rounded-lg ring-2 ring-white" />
+      </div>
       <Formik
         initialValues={initialValues}
         validationSchema={inputValidationSchema}
@@ -78,7 +81,8 @@ export default function RegisterForm() {
               <motion.button 
                 type="submit" 
                 whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }} 
+                whileTap={{ scale: 0.8 }}
+							  transition={{ duration: 0.5 }}
                 className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-medium rounded-md text-sm px-5 py-2.5 text-center hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50" disabled={isSubmitting}
               >
                 {isSubmitting ? <TailSpin height="24" width="24" color="white" /> : 'Enregistrer'}
