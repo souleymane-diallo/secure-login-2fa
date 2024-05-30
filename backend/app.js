@@ -20,9 +20,4 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api', authRoutes);
 
-// Route de test
-app.get('/', (req, res) => {
-    res.send('Secure Login 2FA WIP!');
-});
-
 module.exports = app; 

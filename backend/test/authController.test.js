@@ -20,7 +20,7 @@ describe('Auth Controller', () => {
   describe('POST /api/register', () => {
     it('should register a user with valid email and password', async () => {
       const validPayload = {
-        email: `newuser${Date.now()}@example.com`,  // Utiliser un email unique pour chaque test
+        email: `newuser${Date.now()}@example.com`, 
         password: 'password123'
       };
       const response = await request(app)

@@ -64,7 +64,7 @@ exports.login = async (req, res) => {
                 user.secret = secret.base32; // Ensure user object has the secret
             }
 
-            const otpauthUrl = speakeasy.otpauthURL({ secret: user.secret, label: `MyApp (${email})`, encoding: 'base32' });
+            const otpauthUrl = speakeasy.otpauthURL({ secret: user.secret, label: `Sodi&Sonah224 (${email})`, encoding: 'base32' });
             const qrCodeUrl = await qrcode.toDataURL(otpauthUrl);
 
             return res.json({ message: '2FA setup required', user: { id: user.id, email: user.email, sercret: user.secret }, qrCodeUrl });
@@ -108,7 +108,6 @@ exports.verify2FA = async (req, res) => {
         }
 
     } catch (err) {
-        console.log("err", err);
         res.status(500).json({ error: "Internal server error. Please try again later." });
     }
 };
