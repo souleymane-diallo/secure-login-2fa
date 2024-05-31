@@ -1,9 +1,9 @@
-# Secure Login Page Development with Two-Factor Authentication with Node Express React
+# Secure Login Page with Two-Factor Authentication with Node Express and React
 
 This project aims to implement a robust authentication system using two-factor authentication to enhance security.
 using Google Authenticator. It uses Node Express for backend and React for frontend.
 
-## Features :
+## Features
 - ** User register : secure user registration with validation
 - ** User Login : Secure login system
 - ** Two-Factor Authentification : Intégration of Google Authenticator for enhanced security.
