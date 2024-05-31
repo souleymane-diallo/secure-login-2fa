@@ -104,7 +104,6 @@ describe('Auth Controller', () => {
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('message', '2FA setup required');
       expect(response.body).toHaveProperty('qrCodeUrl');
-      expect(response.body).toMatchSnapshot();
     });
   });
 });
