@@ -23,28 +23,35 @@ Install Google Authenticator playstore or AppStore on your phone
 To get started with the project, follow these steps:
 
 
-# Clone the repository
+### Clone the repository
+```
 git clone `git@github.com:souleymane-diallo/secure-login-2fa.git`
 cd secure-login-2fa
-
-# Install backend dependencies
+```
+### Install backend dependencies
+```
 cd backend
 npm install
-
-# Configure Environment Variables
+```
+### Configure Environment Variables
 Copy the `.env.example` rename it to `.env`
 
-# Install frontend dependencies
+### Install frontend dependencies
+```
 cd ../frontend
 npm install
-
-# Start the backend server
+```
+### Start the backend server
+```
 cd backend
 npm start
+```
+### In a separate terminal, start the frontend application
 
-# In a separate terminal, start the frontend application
+```
 cd ../frontend
 npm run dev
+```
 
-# Run tests backend and frontend
+### Run tests backend and frontend
 npm test
